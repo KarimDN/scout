@@ -49,3 +49,11 @@ button {
 button:hover {
     background: #0056b3;
 }
+.pinBox {
+    & input {
+        width: fit-content;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

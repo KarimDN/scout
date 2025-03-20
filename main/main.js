@@ -5,8 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Get announcements from localStorage
     let updates = JSON.parse(localStorage.getItem('announcements')) || [];
-
+    let username = localStorage.getItem('username');
     // Loop through and display each update
+    if(username === 'ADMIN'){
+        if(!document.querySelector('.adminBtn')){
+            let adminBtn = document.createElement('a');
+            adminBtn.classList.add('adminBtn');
+            adminBtn.href = '../admin/admin.html';
+            adminBtn.innerText = 'Admin Pannel';
+            container.appendChild(adminBtn);
+        }
+    }
     updates.forEach(update => {
         const newUpdate = document.createElement('div');
         newUpdate.classList.add('update');
@@ -21,10 +30,19 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <p>${update.content}</p>
         `;
+        if(update.pinned){
+            newUpdate.classList.add('pinned');
+        }
+
+        
         container.appendChild(newUpdate);
     });
 });
 
-fetch('navBar.html')
+fetch('../navBar.html')
     .then(response => response.text())
     .then(data => document.getElementById('nav').innerHTML = data);
+
+
+
+

@@ -58,6 +58,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 5px;
+    padding: 10px;
 }
 
 .announcements {
@@ -130,6 +131,11 @@ body {
             align-items: center;
         }
     }
+}
+
+.adminBtn {
+    width: fit-content;
+    order: -100;
 }
 
 

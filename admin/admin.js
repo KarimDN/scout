@@ -3,17 +3,18 @@ document.getElementById('announcementForm').addEventListener('submit', function 
     
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
-
-    // Get existing updates or create an empty array
+    const pinned = document.getElementById('pin').checked;
     let updates = JSON.parse(localStorage.getItem('announcements')) || [];
 
-    // Add the new update
-    updates.push({ title, content });
+    updates.push({ title, content, pinned });
 
-    // Save back to localStorage
     localStorage.setItem('announcements', JSON.stringify(updates));
 
     console.log('Announcement saved to localStorage');
 
-    this.reset(); // Clear the form
+    this.reset();
+
+    setTimeout(() => {
+        window.location.href = "../main/main.html";
+    }, 300);
 });
