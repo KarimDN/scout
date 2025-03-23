@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="loginStyle.css">
-    <link rel="icon" type="image/x-icon" href="Images/NWUC7432-removebg-preview.png">
+    <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
     <title>تسجيل دخول</title>
 </head>
 <body>
     <div class="container">
         <img src="../Images/NWUC7432-removebg-preview.png" width="150px">
         <h3>تسجيل دخول</h3>
-        <form id="loginForm">
-            <div class="user">
-                <input type="text" id="usrName" name="name" placeholder="اسم المستخدم" required>
+        <form id="loginForm" method="POST" action="">
+            <div class="email">
+                <input type="email" id="email" name="name" placeholder="البريد الالكتروني" required>
             </div>
             <div class="pass">
                 <input type="password" id="pwd" name="password" placeholder="كلمة المرور" required>
             </div>
             <div class="forgetPass">
-                <a href="#">نسيت كلمة المرور؟</a>
+                <a href="forgetPass.html" target="_blank">نسيت كلمة المرور؟</a>
             </div>
             <div class="submit">
-                <button class="submitBtn">تسجيل دخول</button>                
+                <button id="submitBtn" class="submitBtn">تسجيل دخول</button>                
             </div>
         </form>
     </div>
+    <script type="module" src="login.js"></script>
 </body>
-<script src="login.js"></script>
 </html>

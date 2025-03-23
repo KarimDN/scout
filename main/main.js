@@ -1,20 +1,34 @@
-
+import { app, auth, db } from '../database.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+import {getFirestore, setDoc, doc} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     const container = document.querySelector('.announcements .updates');
 
     // Get announcements from localStorage
     let updates = JSON.parse(localStorage.getItem('announcements')) || [];
-    let username = localStorage.getItem('username');
-    // Loop through and display each update
-    if(username === 'ADMIN'){
-        if(!document.querySelector('.adminBtn')){
-            let adminBtn = document.createElement('a');
-            adminBtn.classList.add('adminBtn');
-            adminBtn.href = '../admin/admin.html';
-            adminBtn.innerText = 'Admin Pannel';
-            container.appendChild(adminBtn);
-        }
+    const userId = localStorage.getItem("loggedInUserId");
+
+    if (userId) {
+        db.collection("admins").doc(userId).get()
+            .then(doc => {
+                if (doc.exists) {
+                    console.log("User is an admin.");
+                    let adminBtn = document.createElement("a");
+                    adminBtn.classList.add("adminBtn");
+                    adminBtn.href = "../admin/admin.html";
+                    adminBtn.innerText = "Admin Panel";
+
+                    const container = document.getElementById("buttonContainer");
+                    if (container) {
+                        container.appendChild(adminBtn);
+                    }
+                } else {
+                    console.log("User is not an admin.");
+                }
+            })
+            .catch(error => console.error("Error checking admin status:", error));
     }
     updates.forEach(update => {
         const newUpdate = document.createElement('div');
