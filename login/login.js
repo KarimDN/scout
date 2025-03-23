@@ -1,7 +1,6 @@
 import { app, auth, db } from '../database.js';
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-import {getFirestore, setDoc, doc} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
 
 const signIn = document.getElementById('submitBtn');
 signIn.addEventListener('click', (event) => {
@@ -18,10 +17,26 @@ signIn.addEventListener('click', (event) => {
     })
     .catch((error) => {
         const errorCode = error.code;
-        if(errorCode === 'auth/invalid-credential'){
+        if(errorCode === 'auth/invalid-credentials'){
             alert('Incorrect Email or Password');
         } else {
-            alert('Account Does Not Exist');
+            alert(error.message);
         }
     })
+})
+
+const forgetPass = document.getElementById('forgetPass');
+forgetPass.addEventListener('click', function() {
+    const email = document.getElementById('email').value;
+    if(email) {
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            alert("Email Sent");
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+    } else {
+        alert("Please enter your email.");
+    }
 })

@@ -19,6 +19,7 @@
                 <label for="content">Announcement Content:</label>
                 <textarea id="content" rows="5" placeholder="Enter content" required></textarea>
             </div>
+            <input type="file" id="imageUpload" accept="image/*">
             <div class="pinBox">
                 <input type="checkbox" name="pin" id="pin"><p>Pin To The Top</p>
             </div>
@@ -26,6 +27,7 @@
         </form>
     </div>
 
-    <script src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
+    <script src="//static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
 </body>
 </html>

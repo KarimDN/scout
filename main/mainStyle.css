@@ -53,6 +53,10 @@ body {
                 color: #5a4192;
                 margin-left: 3px;
             }
+            & img {
+                width: 200px;
+                border-radius: 25px;
+            }
         }
         & .pinned {
             & svg {
@@ -90,6 +94,9 @@ body {
     }
 }
 
+#buttonContainer {
+    margin-bottom: 10px;
+}
 .adminBtn {
     width: fit-content;
     order: -100;
