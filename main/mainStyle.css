@@ -68,11 +68,8 @@ body {
 }
 
 .teamsContainer {
-    background-color: white;
     width: 100%;
     margin: 40px auto;
-    padding: 20px;
-    border-radius: 10px;
     & h3 {
         color: #5a4192;
     }
@@ -81,6 +78,9 @@ body {
         display: grid;
         grid-template-columns: repeat(1fr);
         gap: 5px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
         & .team {
             background-color: green;
             color: white;
@@ -90,6 +90,31 @@ body {
             padding: 15px;
             display: flex;
             align-items: center;
+        }
+    }
+    & .leaders {
+        display: grid;
+        grid-template-columns: repeat(1fr);
+        margin-top: 10px;
+        & .leader {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            height: fit-content;
+            display: grid;
+            grid-template-columns: .5fr 1.5fr;
+            grid-template-rows: 1fr 1fr;
+            align-items: center;
+            & p {
+                height: fit-content;
+                margin: 0;
+            }
+            & .role {
+                font-size: small;
+            }
+        }
+        & .leader svg {
+            grid-row: span 2;
         }
     }
 }
