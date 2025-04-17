@@ -9,27 +9,8 @@
 <body>
     <nav class="navbar" id="nav"></nav>
     <div class="content">
-        <div class="rightCard">
-            <div class="data">
-                <h2>معلومات شخصية</h2>
-                <div>الاسم الثلاثي: اسم ثلاثي</div>
-                <div>العمر: 00</div>
-                <div>عمل رب المنزل: عمل</div>
-                <div>عنوان السكن: سكن</div>
-                <div>التحصيل العلمي: الصف</div>
-                <div>هل يعاني الكشاف من أي أمراض مزمنة؟</div>
-                <div>هل يأخذ الكشاف دواء دائم؟</div>
-                <div>عند الضرورة الاتصال على: 00000000</div>
-                <h2>معلومات كشفية</h2>
-                <div>المرحلة: مرحلة</div>
-                <div>الفرقة: فرقة</div>
-                <div>الطليعة: طليعة</div>
-                <div>الرتبة الكشفية: رتبة</div>
-                <div>تاريخ الانتساب: dd/mm/yy</div>
-            </div>
-        </div>
-    
-        <div class="leftCard">
+
+        <div id="leftCard" class="leftCard">
             <div class="picture">
                 <svg width="150px" height="150px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="0.4" d="M12 22.01C17.5228 22.01 22 17.5329 22 12.01C22 6.48716 17.5228 2.01001 12 2.01001C6.47715 2.01001 2 6.48716 2 12.01C2 17.5329 6.47715 22.01 12 22.01Z" fill="#292D32"/>
@@ -40,7 +21,79 @@
             <div class="memberName"></div>
             <div class="memberPosition"></div>
         </div>
+
+        <div id="formCard" class="rightCard">
+            <h2>سجل الكشاف</h2>
+            <form id="scoutForm">
+                <label for="scoutName">الاسم الكامل:</label>
+                <input type="text" id="scoutName" required>
+
+                <label for="fatherName">اسم الأب:</label>
+                <input type="text" id="fatherName" required>
+
+                <label for="homeJob">عمل رب المنزل:</label>
+                <input type="text" id="homeJob" required>
+
+                <label for="address">عنوان السكن:</label>
+                <input type="text" id="address" required>
+
+                <label for="education">التحصيل العلمي:</label>
+                <input type="text" id="education" required>
+
+                <label for="stage">المرحلة:</label>
+                <select id="stage" required>
+                    <option value="أشبال/زهرات">أشبال/زهرات</option>
+                    <option value="كشافة/مرشدات">كشافة/مرشدات</option>
+                    <option value="متقدم">متقدم</option>
+                    <option value="جوالة/دليلات">جوالة/دليلات</option>
+                </select>
+
+                <label for="gender">الجنس:</label>
+                <select id="gender" required>
+                    <option value="ذكر">ذكر</option>
+                    <option value="أنثى">أنثى</option>
+                </select>
+
+                <label for="team">الفرقة:</label>
+                <input type="text" id="team" required>
+
+                <label for="chronicDisease">هل يعاني الكشاف من أي أمراض مزمنة؟</label>
+                <input type="text" id="chronicDisease" required>
+
+                <label for="medication">هل يأخذ الكشاف دواء بشكل دائم؟</label>
+                <input type="text" id="medication" required>
+
+                <label for="surgery">هل أجرى الكشاف عملية/ات جراحية سابقة؟</label>
+                <input type="text" id="surgery" required>
+
+                <label for="emergencyContact">عند الضرورة الاتصال على:</label>
+                <input type="text" id="emergencyContact" required>
+
+                <label for="scoutGroup">اسم طليعة الكشاف:</label>
+                <input type="text" id="scoutGroup" required>
+
+                <label for="currentRank">رتبته الكشفية الحالية:</label>
+                <select id="currentRank" required>
+                    <option value="مرشح عنصر">مرشح عنصر</option>
+                    <option value="عنصر">عنصر</option>
+                    <option value="مساعد عريف">مساعد عريف</option>
+                    <option value="عريف طليعة">عريف طليعة</option>
+                    <option value="عريف أول">عريف أول</option>
+                    <option value="معاون قائد">معاون قائد</option>
+                    <option value="مساعد قائد">مساعد قائد</option>
+                    <option value="قائد فرقة">قائد فرقة</option>
+                </select>
+                
+                <label for="profilePic">Profile Picture</label>
+                <input type="file" id="profilePic" accept="image/*">
+
+                <button type="submit">إرسال</button>
+            </form>
+        </div>
+    
+
     </div>
 </body>
-<script src="profile.js"></script>
+<script type="module" src="profile.js"></script>
+<script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
 </html>

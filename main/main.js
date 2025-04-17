@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     let adminBtn = document.createElement("a");
                     adminBtn.classList.add("adminBtn");
                     adminBtn.href = "../admin/admin.html";
-                    adminBtn.innerText = "Admin Panel";
+                    adminBtn.innerText = "Add Announcement";
 
                     const container = document.getElementById("buttonContainer");
                     if (container) {
@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .catch(error => console.error("Error checking admin status:", error));
     } else {
-        alert("Please Log In");
         window.location.href = '../login/login.html';
         return;
     }
@@ -34,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
 
-        container.innerHTML = ''; // Clear existing content
+        container.innerHTML = '';
 
         querySnapshot.forEach(doc => {
             const announcement = doc.data();
@@ -63,7 +62,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             announcementElement.innerHTML = html;
 
             if (announcement.pinned) {
-                announcementElement.classList.add('pinned'); // Add a special class for pinned announcements
+                announcementElement.classList.add('pinned'); 
+            } else {
+                document.querySelectorAll('.pin').style = 'position: absolute;';
+                
             }
 
             container.appendChild(announcementElement);
@@ -74,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     
 });
+
 
 fetch('../navBar.html')
     .then(response => response.text())

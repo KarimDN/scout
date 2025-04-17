@@ -31,13 +31,12 @@ document.getElementById('announcementForm').addEventListener('submit', async fun
     let imageUrl = "";
 
     if (imageFile) {
-        // Initialize Filestack with your API key
-        const apiKey = 'Afu0mqReaUsEy91qf8mQwz';  // Replace with your actual Filestack API key
+        const apiKey = 'Afu0mqReaUsEy91qf8mQwz'; 
         const client = filestack.init(apiKey);
 
         try {
             const uploadedFile = await client.upload(imageFile);
-            imageUrl = uploadedFile.url; // Get the URL of the uploaded image
+            imageUrl = uploadedFile.url;
             console.log("Image URL:", imageUrl);
         } catch (error) {
             console.error("Error uploading image:", error);

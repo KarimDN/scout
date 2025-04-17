@@ -10,9 +10,9 @@ signIn.addEventListener('click', (event) => {
 
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-        alert('Login Successfully');
         const user = userCredential.user;
         localStorage.setItem('loggedInUserId', user.uid);
+        localStorage.setItem('loggedInEmail', user.email);
         window.location.href = '../main/main.html';
     })
     .catch((error) => {
