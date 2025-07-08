@@ -8,9 +8,7 @@ body {
     background: gainsboro;
 }
 
-/* Navbar */
-
-
+/* Content Layout */
 .content {
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -18,107 +16,111 @@ body {
     padding: 10px;
 }
 
-.announcements {
+/* Teams & Announcements Sections */
+.teamsContainer, .announcements {
     width: 100%;
     margin: 40px auto;
+}
+
+/* Teams */
+.teamsContainer h3 {
+    color: #5a4192;
+}
+.teamsContainer .teams {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+.teamsContainer .teams .team {
+    background-color: rgb(126, 35, 35);
+    color: white;
+    width: 100%;
+    height: 40px;
+    border-radius: 25px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* Leaders */
+.teamsContainer .leaders {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 10px;
+}
+.teamsContainer .leaders .leader {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr;
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
+}
+.teamsContainer .leaders .leader p {
+    margin: 0;
+}
+.teamsContainer .leaders .leader .role {
+    font-size: small;
+}
+.teamsContainer .leaders .leader svg {
+    grid-row: span 2;
+}
+
+/* Announcements */
+.announcements {
     padding: 20px;
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    & h2 {
-        color: #5a4192;
-    }
-    & .updates {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(1fr);
-        gap: 5px;
-        & .update {
-            background-color: lightgray;
-            width: 100%;
-            height: fit-content;
-            border-radius: 25px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            & .title {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-            }
-            & svg {
-                opacity: 0;
-                color: #5a4192;
-                margin-left: 3px;
-            }
-            & img {
-                width: 200px;
-                border-radius: 25px;
-            }
-        }
-        & .pinned {
-            & svg {
-                opacity: 1;
-            }
-            order: -1;
-        }
-    }
 }
-
-.teamsContainer {
+.announcements h2 {
+    color: #5a4192;
+}
+.announcements .updates {
     width: 100%;
-    margin: 40px auto;
-    & h3 {
-        color: #5a4192;
-    }
-    & .teams {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(1fr);
-        gap: 5px;
-        background-color: white;
-        border-radius: 10px;
-        padding: 20px;
-        & .team {
-            background-color: rgb(126, 35, 35);
-            color: white;
-            width: 100%;
-            height: 40px;
-            border-radius: 25px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-        }
-    }
-    & .leaders {
-        display: grid;
-        grid-template-columns: repeat(1fr);
-        margin-top: 10px;
-        & .leader {
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            height: fit-content;
-            display: grid;
-            grid-template-columns: .5fr 1.5fr;
-            grid-template-rows: 1fr 1fr;
-            align-items: center;
-            & p {
-                height: fit-content;
-                margin: 0;
-            }
-            & .role {
-                font-size: small;
-            }
-        }
-        & .leader svg {
-            grid-row: span 2;
-        }
-    }
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+}
+.announcements .updates .update {
+    background-color: lightgray;
+    width: 100%;
+    height: fit-content;
+    border-radius: 25px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.announcements .updates .update .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.announcements .updates .update svg {
+    opacity: 0;
+    color: #5a4192;
+    margin-left: 3px;
+}
+.announcements .updates .update img {
+    width: 200px;
+    border-radius: 25px;
+}
+.announcements .updates .pinned svg {
+    opacity: 1;
+}
+.announcements .updates .pinned {
+    order: -1;
 }
 
+/* Buttons */
 #buttonContainer {
     margin-bottom: 10px;
 }
@@ -127,5 +129,66 @@ body {
     order: -100;
 }
 
+.update {
+  position: relative;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #e53935;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+}
+
+.update:hover .delete-btn {
+  display: block;
+}
 
 
+/* ---------- Responsive Design ---------- */
+@media (max-width: 900px) {
+    .content {
+        grid-template-columns: 1fr; /* Stack vertically */
+    }
+
+    .teamsContainer, .announcements {
+        margin: 20px auto;
+    }
+
+    .teamsContainer .teams,
+    .teamsContainer .leaders {
+        grid-template-columns: 1fr;
+    }
+
+    .teamsContainer .leaders .leader {
+        grid-template-columns: 0.3fr 1.7fr;
+    }
+
+    .announcements .updates .update img {
+        width: 100%; /* Image takes full width */
+    }
+}
+
+@media (max-width: 500px) {
+    .teamsContainer .leaders .leader {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        text-align: center;
+    }
+    
+    .teamsContainer .leaders .leader svg {
+        grid-row: 1;
+        justify-self: center;
+    }
+
+    .teamsContainer .leaders .leader p {
+        margin-top: 5px;
+    }
+}

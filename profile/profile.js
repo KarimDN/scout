@@ -1,6 +1,9 @@
 import { app, auth, db } from '../database.js';
-import {getFirestore, setDoc, doc, getDoc, query, orderBy, getDocs, collection} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getFirestore, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+const storage = getStorage(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
     try {
@@ -95,16 +98,17 @@ document.addEventListener('DOMContentLoaded', async function () {
                 let imageUrl = "";
   
                 if (imageFile) {
-                  const apiKey = 'Afu0mqReaUsEy91qf8mQwz';  
-                  const client = filestack.init(apiKey);
-  
                   try {
-                    const uploadedFile = await client.upload(imageFile);
-                    imageUrl = uploadedFile.url;
+                    // Create a storage reference
+                    const imageRef = storageRef(storage, `profilePictures/${userId}/${imageFile.name}`);
+                    // Upload the file
+                    await uploadBytes(imageRef, imageFile);
+                    // Get the download URL
+                    imageUrl = await getDownloadURL(imageRef);
                     console.log("Image URL:", imageUrl);
                   } catch (error) {
-                    console.error("Error uploading image:", error);
-                    alert("Image upload failed. Please try again.");
+                    console.error("Error uploading image to Firebase Storage:", error);
+                    alert("فشل رفع الصورة. الرجاء المحاولة مجددًا.");
                     return;
                   }
                 }
@@ -147,4 +151,3 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     });
 });
-  

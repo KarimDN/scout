@@ -1,6 +1,9 @@
 import { app, auth, db } from '../database.js';
 import { getFirestore, setDoc, doc, getDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+const storage = getStorage(app);
 
 onAuthStateChanged(auth, async(user) => {
     if(!user){
@@ -28,17 +31,18 @@ onAuthStateChanged(auth, async(user) => {
             const imageFile = document.getElementById('imageUpload').files[0];
         
             let imageUrl = "";
-        
+
             if (imageFile) {
-                const apiKey = 'Afu0mqReaUsEy91qf8mQwz'; 
-                const client = filestack.init(apiKey);
-        
                 try {
-                    const uploadedFile = await client.upload(imageFile);
-                    imageUrl = uploadedFile.url;
+                    // Create a reference to Firebase Storage location
+                    const imageRef = storageRef(storage, `announcementImages/${userId}/${imageFile.name}`);
+                    // Upload the file
+                    await uploadBytes(imageRef, imageFile);
+                    // Get the download URL
+                    imageUrl = await getDownloadURL(imageRef);
                     console.log("Image URL:", imageUrl);
                 } catch (error) {
-                    console.error("Error uploading image:", error);
+                    console.error("Error uploading image to Firebase Storage:", error);
                     alert("Image upload failed. Please try again.");
                     return;
                 }
@@ -63,5 +67,3 @@ onAuthStateChanged(auth, async(user) => {
         });
     }
 })
-
-

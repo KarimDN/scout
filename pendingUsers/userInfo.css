@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+    margin: 0;
+  }
+  
+  .page-title {
+    color: #5a4192;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .info-container {
+    background: white;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    padding: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .info-container div {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .buttons-container {
+    text-align: center;
+  }
+  
+  .accept-button, .reject-button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .accept-button {
+    background-color: green;
+    color: white;
+  }
+  
+  .reject-button {
+    background-color: red;
+    color: white;
+  }
+  
+  .accept-button:hover {
+    background-color: #008000cc; /* Slightly darker green */
+  }
+  
+  .reject-button:hover {
+    background-color: #cc0000; /* Slightly darker red */
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    .info-container {
+      padding: 15px;
+    }
+  
+    .accept-button, .reject-button {
+      width: 100%;
+      margin: 10px 0;
+    }
+  }
+  

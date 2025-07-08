@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Info</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
+  <title>User Info</title>
+  <link rel="stylesheet" href="userInfo.css">
 </head>
-<body>
-    <h1>User Information</h1>
-    <div id="infoContainer"></div> <!-- Specific fields will be appended here -->
 
-    <button type="button" id="acceptButton" style="background-color: green; color: white;">Accept</button>
-    <button type="button" id="rejectButton" style="background-color: red; color: white;">Reject</button>
+<body>
+  <h1 class="page-title">User Information</h1>
+
+  <div id="infoContainer" class="info-container">
+    <!-- User details will be added here -->
+  </div>
+
+  <div class="buttons-container">
+    <button type="button" id="acceptButton" class="accept-button">Accept</button>
+    <button type="button" id="rejectButton" class="reject-button">Reject</button>
+  </div>
+
+  <script type="module" src="userInfo.js"></script>
 </body>
-<script type="module" src="userInfo.js"></script>
 </html>
