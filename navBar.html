@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../main/mainStyle.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../main/mainStyle.css" />
     <title>Document</title>
     <style>
         .navbar {
@@ -13,21 +13,19 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            & img {
-                filter: brightness(0) invert(1);
-            }
-            & ul {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-            }
         }
-
+        .navbar img {
+            filter: brightness(0) invert(1);
+        }
+        .navbar ul {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
         .nav-logo {
             font-size: 24px;
             font-weight: bold;
         }
-
         .nav-links {
             list-style: none;
             margin: 0;
@@ -35,22 +33,19 @@
             display: flex;
             gap: 15px;
         }
-
         .nav-links li {
             display: inline;
+            position: relative; /* for red dot */
         }
-
         .nav-links a {
             color: white;
             text-decoration: none;
             font-size: 18px;
             transition: color 0.2s;
         }
-
         .nav-links a:hover {
             color: #ffd700; /* Gold color for hover */
         }
-
         /* Red Dot Style */
         .red-dot {
             position: absolute;
@@ -62,31 +57,47 @@
             border-radius: 50%;
             display: none;
         }
-        #pendingUsersSection {
-            position: relative;
-        }
     </style>
 </head>
 <body id="navBar">
     <div class="nav-logo">
-        <img src="../Images/NWUC7432-removebg-preview.png" width="50px">
+        <img src="../Images/NWUC7432-removebg-preview.png" width="50px" />
     </div>
     <ul class="nav-links">
         <li><a href="../main/main.html">الصفحة الرئيسية</a></li>
-        <li id="pendingUsersSection">
+
+        <!-- Pending Users menu item, initially hidden by JS if not admin -->
+        <li id="pendingUsersSection" style="display:none;">
             <a href="../pendingUsers/pendingUsers.html">
                 <span style="font-size: 18px">المستخدمون المعلقون</span>
                 <span id="redDot" class="red-dot"></span>
             </a>
         </li>
 
-        <li id="pfp"><a href="../profile/profile.html">
-            <span style="font-size: 18px">الملف الشخصي</span>
-        </a></li>
+        <li id="pfp">
+            <a href="../profile/profile.html">
+                <span style="font-size: 18px">الملف الشخصي</span>
+            </a>
+        </li>
 
         <li><a href="../login/login.html">تسجيل الخروج</a></li>
-        
     </ul>
+
+    <script type="module">
+        // Example: Replace this logic with your actual admin check (e.g., Firebase user role)
+        // For demo, I'll assume you get a boolean isAdmin from somewhere:
+
+        // Dummy example - replace with real admin check:
+        const isAdmin = false; // Change to true to test admin view
+
+        // If admin, show the pendingUsersSection menu item
+        if (isAdmin) {
+            document.getElementById('pendingUsersSection').style.display = 'inline-block';
+            // If you want to show the red dot, also:
+            // document.getElementById('redDot').style.display = 'inline-block';
+        }
+    </script>
+
+    <script type="module" src="main/main.js"></script>
 </body>
-<script type="module" src="main/main.js"></script>
 </html>
