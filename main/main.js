@@ -10,38 +10,32 @@ import {
 const storage = getStorage();
 
 function getStoragePathFromUrl(url) {
-  const bucketName = "omarbenabdelaziz-53d71.firebasestorage.app"; // Your bucket name
+  const bucketName = "omarbenabdelaziz-53d71.firebasestorage.app";
   const baseUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/`;
-
   let path = url.split(baseUrl)[1];
   if (!path) return null;
-  path = decodeURIComponent(path.split("?")[0]);
-  return path;
+  return decodeURIComponent(path.split("?")[0]);
 }
 
-// Reusable image delete helper
 export async function deleteImageByUrl(imageUrl) {
   if (!imageUrl) return;
   try {
     const imagePath = getStoragePathFromUrl(imageUrl);
     if (!imagePath) {
-      console.warn("Could not parse storage path from URL:", imageUrl);
+      console.warn("Could not parse storage path:", imageUrl);
       return;
     }
     const imageRef = ref(storage, imagePath);
     await deleteObject(imageRef);
-    console.log("Deleted image from storage:", imagePath);
+    console.log("Deleted image:", imagePath);
   } catch (error) {
-    console.error("Error deleting image from storage:", error);
+    console.error("Error deleting image:", error);
   }
 }
 
-// Reusable announcement delete function (Firestore doc + image)
 export async function deleteAnnouncement(announcementId, imageUrl) {
   try {
-    if (imageUrl) {
-      await deleteImageByUrl(imageUrl);
-    }
+    if (imageUrl) await deleteImageByUrl(imageUrl);
     await deleteDoc(doc(db, "announcements", announcementId));
     console.log("Deleted announcement:", announcementId);
   } catch (error) {
@@ -50,6 +44,7 @@ export async function deleteAnnouncement(announcementId, imageUrl) {
   }
 }
 
+// Load navbar on page load
 document.addEventListener('DOMContentLoaded', async function () {
   try {
     const response = await fetch('../navBar.html');
@@ -60,48 +55,61 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 });
 
+// Auth check and admin handling
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = '../login/login.html';
     return;
   }
 
-  console.log('Logged in user:', user.email);
+  console.log('Logged in:', user.email);
   const userId = user.uid;
-
   let isAdmin = false;
 
-  // Admin check and add Add Announcement button
   try {
     const adminDoc = await getDoc(doc(db, "admins", userId));
     isAdmin = adminDoc.exists();
-
     if (isAdmin) {
-      console.log("User is an admin.");
+      console.log("User is admin");
 
+      // Wait for navbar to be injected
+      await new Promise(resolve => setTimeout(resolve, 100)); // wait for DOM update
+
+      const navLinks = document.getElementById("navLinks");
+      if (navLinks) {
+        // Insert "Pending Users" with red dot
+        const pendingLi = document.createElement("li");
+        pendingLi.innerHTML = `
+          <a href="../pendingUsers/pendingUsers.html" style="position: relative;">
+            <span style="font-size: 18px">المستخدمون المعلقون</span>
+            <span id="redDot" class="red-dot" style="display: none; position: absolute; top: -5px; right: -5px; width: 10px; height: 10px; background: red; border-radius: 50%;"></span>
+          </a>
+        `;
+        navLinks.insertBefore(pendingLi, navLinks.children[1]);
+
+        const pendingUsersSnapshot = await getDocs(collection(db, "pendingUsers"));
+        if (pendingUsersSnapshot.size > 0) {
+          const redDot = document.getElementById("redDot");
+          if (redDot) redDot.style.display = "block";
+        }
+      }
+
+      // Add "Add Announcement" button
       const adminBtn = document.createElement("a");
       adminBtn.classList.add("adminBtn");
       adminBtn.href = "../admin/admin.html";
       adminBtn.innerText = "Add Announcement";
 
-      const container = document.getElementById("buttonContainer");
-      if (container) {
-        container.appendChild(adminBtn);
+      const buttonContainer = document.getElementById("buttonContainer");
+      if (buttonContainer) {
+        buttonContainer.appendChild(adminBtn);
       }
-
-      const pendingUsersSnapshot = await getDocs(collection(db, "pendingUsers"));
-      const redDot = document.getElementById('redDot');
-      if (redDot) {
-        redDot.style.display = pendingUsersSnapshot.size > 0 ? 'block' : 'none';
-      }
-    } else {
-      console.log("User is not an admin.");
     }
-  } catch (error) {
-    console.error("Error checking admin status:", error);
+  } catch (err) {
+    console.error("Admin check error:", err);
   }
 
-  // Load announcements and auto-delete expired
+  // Load and render announcements
   try {
     const container = document.getElementById('updates');
     const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
@@ -109,30 +117,25 @@ onAuthStateChanged(auth, async (user) => {
     container.innerHTML = '';
 
     const expirationMs = 3 * 24 * 60 * 60 * 1000; // 3 days
-    // const expirationMs = 1 * 15 * 1000; // 15 seconds for testing
     const now = Date.now();
 
     for (const docSnap of querySnapshot.docs) {
       const announcement = docSnap.data();
-      const createdAt = announcement.createdAt ? announcement.createdAt.toDate().getTime() : 0;
+      const createdAt = announcement.createdAt?.toDate().getTime() || 0;
 
-      // Auto-delete expired unpinned announcements
       if (!announcement.pinned && createdAt && (now - createdAt > expirationMs)) {
         try {
           await deleteAnnouncement(docSnap.id, announcement.imageUrl);
-          continue; // Skip rendering deleted announcement
+          continue;
         } catch {
-          // error logged in deleteAnnouncement
+          // already logged
         }
       }
 
-      // Create announcement element
       const announcementElement = document.createElement('div');
       announcementElement.classList.add('update');
       announcementElement.dataset.id = docSnap.id;
       announcementElement.dataset.image = announcement.imageUrl || '';
-
-      // Show delete button only on hover if admin
       announcementElement.style.position = "relative";
 
       const date = createdAt
@@ -142,8 +145,8 @@ onAuthStateChanged(auth, async (user) => {
       let html = `
         <div class="title">
           <div class="pin">
-            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 5C6.5 4.44772 6.94772 4 7.5 4H9H15H16.5C17.0523 4 17.5 4.44772 17.5 5C17.5 5.55228 17.0523 6 16.5 6H16.095L16.9132 15H19C19.5523 15 20 15.4477 20 16C20 16.5523 19.5523 17 19 17H16H13V22C13 22.5523 12.5523 23 12 23C11.4477 23 11 22.5523 11 22V17H8H5C4.44772 17 4 16.5523 4 16C4 15.4477 4.44772 15 5 15H7.08679L7.90497 6H7.5C6.94772 6 6.5 5.55228 6.5 5ZM9.91321 6L9.09503 15H12H14.905L14.0868 6H9.91321Z" fill="#000000"/>
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 5C6.5 4.44772...Z" fill="#000000"/>
             </svg>
           </div>
           <h4>${announcement.title}</h4>
@@ -162,7 +165,6 @@ onAuthStateChanged(auth, async (user) => {
         announcementElement.classList.add('pinned');
       }
 
-      // Add delete button for admins
       if (isAdmin) {
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'DELETE';
@@ -170,10 +172,9 @@ onAuthStateChanged(auth, async (user) => {
         deleteBtn.classList.add('delete-btn');
 
         deleteBtn.addEventListener('click', async (e) => {
-          e.stopPropagation(); // prevent any parent click handlers if any
+          e.stopPropagation();
           const confirmDelete = confirm("Are you sure you want to delete this announcement?");
           if (!confirmDelete) return;
-
           try {
             await deleteAnnouncement(announcementElement.dataset.id, announcementElement.dataset.image);
             announcementElement.remove();

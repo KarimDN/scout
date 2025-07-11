@@ -1,103 +1,77 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../main/mainStyle.css" />
-    <title>Document</title>
-    <style>
-        .navbar {
-            background: #5a4192;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-        }
-        .navbar img {
-            filter: brightness(0) invert(1);
-        }
-        .navbar ul {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-        .nav-logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .nav-links {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 15px;
-        }
-        .nav-links li {
-            display: inline;
-            position: relative; /* for red dot */
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover {
-            color: #ffd700; /* Gold color for hover */
-        }
-        /* Red Dot Style */
-        .red-dot {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border-radius: 50%;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الشريط العلوي</title>
+  <link rel="stylesheet" href="../main/mainStyle.css" />
+  <style>
+
+    .navbar {
+      background: #5a4192;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 15px;
+    }
+
+    .navbar img {
+      filter: brightness(0) invert(1);
+    }
+
+    .nav-logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-links li {
+      display: inline;
+      position: relative;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #ffd700;
+    }
+
+    .red-dot {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      display: none;
+    }
+  </style>
 </head>
-<body id="navBar">
+<body>
+  <div class="navbar">
     <div class="nav-logo">
-        <img src="../Images/NWUC7432-removebg-preview.png" width="50px" />
+      <img src="../Images/NWUC7432-removebg-preview.png" width="50px" />
     </div>
-    <ul class="nav-links">
-        <li><a href="../main/main.html">الصفحة الرئيسية</a></li>
-
-        <!-- Pending Users menu item, initially hidden by JS if not admin -->
-        <li id="pendingUsersSection" style="display:none;">
-            <a href="../pendingUsers/pendingUsers.html">
-                <span style="font-size: 18px">المستخدمون المعلقون</span>
-                <span id="redDot" class="red-dot"></span>
-            </a>
-        </li>
-
-        <li id="pfp">
-            <a href="../profile/profile.html">
-                <span style="font-size: 18px">الملف الشخصي</span>
-            </a>
-        </li>
-
-        <li><a href="../login/login.html">تسجيل الخروج</a></li>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../main/main.html">الصفحة الرئيسية</a></li>
+      <!-- "المستخدمون المعلقون" will be injected here by main.js if user is admin -->
+      <li><a href="../profile/profile.html">الملف الشخصي</a></li>
+      <li><a href="../login/login.html">تسجيل الخروج</a></li>
     </ul>
-
-    <script type="module">
-        // Example: Replace this logic with your actual admin check (e.g., Firebase user role)
-        // For demo, I'll assume you get a boolean isAdmin from somewhere:
-
-        // Dummy example - replace with real admin check:
-        const isAdmin = false; // Change to true to test admin view
-
-        // If admin, show the pendingUsersSection menu item
-        if (isAdmin) {
-            document.getElementById('pendingUsersSection').style.display = 'inline-block';
-            // If you want to show the red dot, also:
-            // document.getElementById('redDot').style.display = 'inline-block';
-        }
-    </script>
-
-    <script type="module" src="main/main.js"></script>
+  </div>
 </body>
 </html>
