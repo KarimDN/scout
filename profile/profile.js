@@ -2,8 +2,78 @@ import { app, auth, db } from '../database.js';
 import { getFirestore, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-
+import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 const storage = getStorage(app);
+
+
+function showForm(container, profCard, userId) {
+  profCard.innerHTML = '';
+
+  const form = document.getElementById("scoutForm");
+  if (!form) return;
+
+  form.style.display = 'block';
+
+  // Prevent duplicate event listeners
+  form.replaceWith(form.cloneNode(true));
+  const newForm = document.getElementById("scoutForm");
+
+  newForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const imageFile = document.getElementById('profilePic').files[0];
+    let imageUrl = "";
+
+    if (imageFile) {
+      try {
+        const pathUserId = userId || 'anonymous-' + uuidv4();
+        const imageRef = storageRef(storage, `profilePictures/${pathUserId}/${imageFile.name}`);
+        await uploadBytes(imageRef, imageFile);
+        imageUrl = await getDownloadURL(imageRef);
+      } catch (error) {
+        console.error("Error uploading image to Firebase Storage:", error);
+        alert("فشل رفع الصورة. الرجاء المحاولة مجددًا.");
+        return;
+      }
+    }
+
+    const formData = {
+      scoutName: document.getElementById("scoutName").value,
+      fatherName: document.getElementById("fatherName").value,
+      homeJob: document.getElementById("homeJob").value,
+      address: document.getElementById("address").value,
+      education: document.getElementById("education").value,
+      stage: document.getElementById("stage").value,
+      gender: document.getElementById("gender").value,
+      team: document.getElementById("team").value,
+      bloodType: document.getElementById("bloodType").value,
+      chronicDisease: document.getElementById("chronicDisease").value,
+      medication: document.getElementById("medication").value,
+      surgery: document.getElementById("surgery").value,
+      emergencyContact: document.getElementById("emergencyContact").value,
+      scoutGroup: document.getElementById("scoutGroup").value,
+      currentRank: document.getElementById("currentRank").value,
+      timestamp: new Date(),
+      profilePicture: imageUrl
+    };
+
+    try {
+      const documentId = userId || uuidv4();
+      await setDoc(doc(db, "pendingUsers", documentId), formData);
+
+      alert("تم إرسال البيانات بنجاح! في انتظار المراجعة.");
+      newForm.reset();
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.");
+    }
+  });
+}
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     try {
@@ -14,18 +84,16 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.error("Error loading navbar:", error);
     }
   
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = '../login/login.html';
-      } else {
-        const userId = user.uid;
+
+    let user = null;
+    onAuthStateChanged(auth, async (u) => {
+      user = u;
+
+        const userId = user ? user.uid : null;
         const container = document.getElementById('formCard');
         const profCard = document.getElementById('leftCard');
-        if (!userId) {
-          window.location.href = '../login/login.html';
-          return;
-        }
   
+      if(userId){
         try {
           const pendingDoc = await getDoc(doc(db, "pendingUsers", userId));
           if (pendingDoc.exists()) {
@@ -86,63 +154,10 @@ document.addEventListener('DOMContentLoaded', async function () {
               `;
             }
   
-          } else {
+          } else {  
             // User has not entered their data yet
             console.log("User has not entered their data yet");
-            const form = document.getElementById("scoutForm");
-  
-            if (form) {
-              form.addEventListener("submit", async function (e) {
-                e.preventDefault();
-                const imageFile = document.getElementById('profilePic').files[0];
-                let imageUrl = "";
-  
-                if (imageFile) {
-                  try {
-                    // Create a storage reference
-                    const imageRef = storageRef(storage, `profilePictures/${userId}/${imageFile.name}`);
-                    // Upload the file
-                    await uploadBytes(imageRef, imageFile);
-                    // Get the download URL
-                    imageUrl = await getDownloadURL(imageRef);
-                    console.log("Image URL:", imageUrl);
-                  } catch (error) {
-                    console.error("Error uploading image to Firebase Storage:", error);
-                    alert("فشل رفع الصورة. الرجاء المحاولة مجددًا.");
-                    return;
-                  }
-                }
-  
-                const formData = {
-                  scoutName: document.getElementById("scoutName").value,
-                  fatherName: document.getElementById("fatherName").value,
-                  homeJob: document.getElementById("homeJob").value,
-                  address: document.getElementById("address").value,
-                  education: document.getElementById("education").value,
-                  stage: document.getElementById("stage").value,
-                  gender: document.getElementById("gender").value,
-                  team: document.getElementById("team").value,
-                  bloodType: document.getElementById("bloodType").value,
-                  chronicDisease: document.getElementById("chronicDisease").value,
-                  medication: document.getElementById("medication").value,
-                  surgery: document.getElementById("surgery").value,
-                  emergencyContact: document.getElementById("emergencyContact").value,
-                  scoutGroup: document.getElementById("scoutGroup").value,
-                  currentRank: document.getElementById("currentRank").value,
-                  timestamp: new Date(),
-                  profilePicture: imageUrl
-                };
-  
-                try {
-                  await setDoc(doc(db, "pendingUsers", userId), formData);
-                  alert("تم إرسال البيانات بنجاح! في انتظار المراجعة.");
-                  form.reset();
-                } catch (error) {
-                  console.error("Error saving data:", error);
-                  alert("حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.");
-                }
-              });
-            }
+            showForm(container, profCard, userId);
           }
   
         } catch (error) {
@@ -150,5 +165,11 @@ document.addEventListener('DOMContentLoaded', async function () {
           container.innerHTML = "<p>حدث خطأ. الرجاء المحاولة مجدداً.</p>";
         }
       }
+
+      else {
+    // Not logged in: skip Firestore reads and show form directly
+      showForm(container, profCard, null);
+      }
+      
     });
 });
