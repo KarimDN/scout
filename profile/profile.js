@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                   stage: document.getElementById("stage").value,
                   gender: document.getElementById("gender").value,
                   team: document.getElementById("team").value,
+                  bloodType: document.getElementById("bloodType").value,
                   chronicDisease: document.getElementById("chronicDisease").value,
                   medication: document.getElementById("medication").value,
                   surgery: document.getElementById("surgery").value,

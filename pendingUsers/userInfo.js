@@ -27,9 +27,9 @@ async function loadUserData() {
             }
 
             const fields = [
-                "address", "chronicDisease", "currentRank", "education", "emergencyContact",
-                "fatherName", "gender", "homeJob", "medication", "scoutGroup", "scoutName",
-                "stage", "surgery", "team"
+                "scoutName", "gender", "fatherName", "homeJob", "address", "emergencyContact", "education",
+                "team", "scoutGroup", "stage", "currentRank", 
+                "chronicDisease", "medication", "surgery", "bloodType"
             ];
 
             fields.forEach(field => {
