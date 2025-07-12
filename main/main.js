@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/fi
 import {
   getStorage, ref, deleteObject
 } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+import { loadNavBar, handleAdminNavBar } from '../navBar.js';
 
 const storage = getStorage();
 
@@ -44,18 +45,13 @@ export async function deleteAnnouncement(announcementId, imageUrl) {
   }
 }
 
-// Load navbar on page load
-document.addEventListener('DOMContentLoaded', async function () {
-  try {
-    const response = await fetch('../navBar.html');
-    const data = await response.text();
-    document.getElementById('nav').innerHTML = data;
-  } catch (error) {
-    console.error("Error loading navbar:", error);
-  }
+// ⬇️ Run when DOM is ready
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadNavBar();          // Load navbar first
+  handleAdminNavBar();         // Then inject admin red dot, links etc.
 });
 
-// Auth check and admin handling
+// ⬇️ Auth check and content rendering
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = '../login/login.html';
@@ -64,50 +60,6 @@ onAuthStateChanged(auth, async (user) => {
 
   console.log('Logged in:', user.email);
   const userId = user.uid;
-  let isAdmin = false;
-
-  try {
-    const adminDoc = await getDoc(doc(db, "admins", userId));
-    isAdmin = adminDoc.exists();
-    if (isAdmin) {
-      console.log("User is admin");
-
-      // Wait for navbar to be injected
-      await new Promise(resolve => setTimeout(resolve, 100)); // wait for DOM update
-
-      const navLinks = document.getElementById("navLinks");
-      if (navLinks) {
-        // Insert "Pending Users" with red dot
-        const pendingLi = document.createElement("li");
-        pendingLi.innerHTML = `
-          <a href="../pendingUsers/pendingUsers.html" style="position: relative;">
-            <span style="font-size: 18px">المستخدمون المعلقون</span>
-            <span id="redDot" class="red-dot" style="display: none; position: absolute; top: -5px; right: -5px; width: 10px; height: 10px; background: red; border-radius: 50%;"></span>
-          </a>
-        `;
-        navLinks.insertBefore(pendingLi, navLinks.children[1]);
-
-        const pendingUsersSnapshot = await getDocs(collection(db, "pendingUsers"));
-        if (pendingUsersSnapshot.size > 0) {
-          const redDot = document.getElementById("redDot");
-          if (redDot) redDot.style.display = "block";
-        }
-      }
-
-      // Add "Add Announcement" button
-      const adminBtn = document.createElement("a");
-      adminBtn.classList.add("adminBtn");
-      adminBtn.href = "../admin/admin.html";
-      adminBtn.innerText = "Add Announcement";
-
-      const buttonContainer = document.getElementById("buttonContainer");
-      if (buttonContainer) {
-        buttonContainer.appendChild(adminBtn);
-      }
-    }
-  } catch (err) {
-    console.error("Admin check error:", err);
-  }
 
   // Load and render announcements
   try {
@@ -118,6 +70,9 @@ onAuthStateChanged(auth, async (user) => {
 
     const expirationMs = 3 * 24 * 60 * 60 * 1000; // 3 days
     const now = Date.now();
+
+    const adminDoc = await getDoc(doc(db, "admins", userId));
+    const isAdmin = adminDoc.exists();
 
     for (const docSnap of querySnapshot.docs) {
       const announcement = docSnap.data();
@@ -148,7 +103,6 @@ onAuthStateChanged(auth, async (user) => {
             <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 5C6.5 4.44772 6.94772 4 7.5 4H9H15H16.5C17.0523 4 17.5 4.44772 17.5 5C17.5 5.55228 17.0523 6 16.5 6H16.095L16.9132 15H19C19.5523 15 20 15.4477 20 16C20 16.5523 19.5523 17 19 17H16H13V22C13 22.5523 12.5523 23 12 23C11.4477 23 11 22.5523 11 22V17H8H5C4.44772 17 4 16.5523 4 16C4 15.4477 4.44772 15 5 15H7.08679L7.90497 6H7.5C6.94772 6 6.5 5.55228 6.5 5ZM9.91321 6L9.09503 15H12H14.905L14.0868 6H9.91321Z" fill="#000000"/>
             </svg>
-
           </div>
           <h4>${announcement.title}</h4>
         </div>
@@ -188,6 +142,19 @@ onAuthStateChanged(auth, async (user) => {
       }
 
       container.appendChild(announcementElement);
+    }
+
+    // Admin-only: add announcement button
+    if (isAdmin) {
+      const adminBtn = document.createElement("a");
+      adminBtn.classList.add("adminBtn");
+      adminBtn.href = "../admin/announce.html";
+      adminBtn.innerText = "Add Announcement";
+
+      const buttonContainer = document.getElementById("buttonContainer");
+      if (buttonContainer) {
+        buttonContainer.appendChild(adminBtn);
+      }
     }
   } catch (error) {
     console.error("Error loading announcements:", error);

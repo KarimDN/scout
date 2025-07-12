@@ -47,6 +47,7 @@
 
     .nav-links a:hover {
       color: #ffd700;
+      cursor: pointer;
     }
 
     .red-dot {
@@ -59,6 +60,7 @@
       border-radius: 50%;
       display: none;
     }
+
   </style>
 </head>
 <body>
@@ -68,9 +70,8 @@
     </div>
     <ul class="nav-links" id="navLinks">
       <li><a href="../main/main.html">الصفحة الرئيسية</a></li>
-      <!-- "المستخدمون المعلقون" will be injected here by main.js if user is admin -->
       <li><a href="../profile/profile.html">الملف الشخصي</a></li>
-      <li><a href="../login/login.html">تسجيل الخروج</a></li>
+      <li><a id="logOutBtn">تسجيل الخروج</a></li>
     </ul>
   </div>
 </body>

@@ -2,15 +2,14 @@ import { auth, db } from '../database.js';  // Assuming this is where Firebase i
 import { getDoc, doc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { getDocs, collection } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { loadNavBar, handleAdminNavBar } from '../navBar.js';
 
 const tableBody = document.getElementById("tableBody");
-try {
-      const response = await fetch('../navBar.html');
-      const data = await response.text();
-      document.getElementById('nav').innerHTML = data;
-  } catch (error) {
-    console.error("Error loading navbar:", error);
-}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadNavBar();          // Load navbar first
+  handleAdminNavBar();         // Inject admin link & red dot
+});
 
 async function loadUsers() {
   // Make sure user is logged in and is an admin

@@ -1,69 +1,35 @@
-import { app, auth, db } from '../database.js';
-import { getFirestore, setDoc, doc, getDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+import { auth, db } from "../database.js";
+import {
+  getDoc,
+  getDocs,
+  doc,
+  collection
+} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+import { loadNavBar, handleAdminNavBar } from '../navBar.js';
 
-const storage = getStorage(app);
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadNavBar();          // Load navbar first
+  handleAdminNavBar();         // Inject admin link & red dot
+});
 
-onAuthStateChanged(auth, async(user) => {
-    if(!user){
-        window.location.href = '../login/login.html';
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  try {
+    const adminRef = doc(db, "admins", user.uid);
+    const adminSnap = await getDoc(adminRef);
+
+    if (adminSnap.exists()) {
+      const pendingUsersSnapshot = await getDocs(collection(db, "pendingUsers"));
+      if (pendingUsersSnapshot.size > 0) {
+        const redDot = document.getElementById("redDot");
+        if (redDot) redDot.style.opacity = 1;
+      }
     } else {
-
-        const userId = user.uid;
-        const adminRef = doc(db, "admins", userId);
-        getDoc(adminRef)
-        .then(docSnap => {
-            if (!docSnap.exists()) {
-                window.location.href = "../main/main.html";
-            }
-        })
-        .catch(error => {
-            console.error("Error checking admin status:", error);
-        });
-
-        document.getElementById('announcementForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const pinned = document.getElementById('pin').checked;
-            const imageFile = document.getElementById('imageUpload').files[0];
-        
-            let imageUrl = "";
-
-            if (imageFile) {
-                try {
-                    // Create a reference to Firebase Storage location
-                    const imageRef = storageRef(storage, `announcementImages/${userId}/${imageFile.name}`);
-                    // Upload the file
-                    await uploadBytes(imageRef, imageFile);
-                    // Get the download URL
-                    imageUrl = await getDownloadURL(imageRef);
-                    console.log("Image URL:", imageUrl);
-                } catch (error) {
-                    console.error("Error uploading image to Firebase Storage:", error);
-                    alert("Image upload failed. Please try again.");
-                    return;
-                }
-            }
-        
-            try {
-                await addDoc(collection(db, "announcements"), {
-                    title: title,
-                    content: content,
-                    pinned: pinned,
-                    imageUrl: imageUrl,
-                    createdAt: serverTimestamp()
-                });
-        
-                alert("Successfully Announced!");
-                document.getElementById('announcementForm').reset(); // Clear the form
-                window.location.href = "../main/main.html"; // Redirect after success
-            } catch (error) {
-                console.error("Error posting announcement:", error);
-                alert("Error posting announcement. Please try again.");
-            }
-        });
+      window.location.href = "../main/main.html";
     }
-})
+  } catch (error) {
+    console.error("Error checking admin or pending users:", error);
+  }
+});
