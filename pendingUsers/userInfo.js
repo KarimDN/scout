@@ -88,7 +88,7 @@ acceptButton.addEventListener("click", async () => {
     await deleteDoc(doc(db, "pendingUsers", userId));
 
     alert(`تم قبول المستخدم ونُقل إلى مجموعة ${isAnonymous ? "unlinkedUsers" : "Users"}.`);
-    window.location.href = "pendingUsers.html";
+    window.location.replace("pendingUsers.html");
   } catch (error) {
     console.error("Error accepting user:", error);
     alert("حدث خطأ أثناء قبول المستخدم.");
@@ -99,7 +99,7 @@ rejectButton.addEventListener("click", async () => {
   try {
     await deleteDoc(doc(db, "pendingUsers", userId));
     alert("تم رفض المستخدم وحذفه من قائمة الانتظار.");
-    window.location.href = "pendingUsers.html";
+    window.location.replace("pendingUsers.html");
   } catch (error) {
     console.error("Error rejecting user:", error);
     alert("حدث خطأ أثناء رفض المستخدم.");
