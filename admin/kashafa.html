@@ -85,6 +85,30 @@
       handleAdminNavBar();
     });
 
+    function formatBirthdate(birth) {
+      // Case 1: Firestore Timestamp with .toDate() method
+      if (birth && typeof birth.toDate === 'function') {
+        return birth.toDate().toLocaleDateString('ar-EG');
+      }
+
+      // Case 2: Raw Timestamp object { seconds, nanoseconds }
+      if (birth && typeof birth === 'object' && 'seconds' in birth) {
+        const date = new Date(birth.seconds * 1000);
+        return date.toLocaleDateString('ar-EG');
+      }
+
+      // Case 3: ISO string like "2005-08-15"
+      if (typeof birth === 'string') {
+        const parsed = new Date(birth);
+        if (!isNaN(parsed)) {
+          return parsed.toLocaleDateString('ar-EG');
+        }
+      }
+
+      // Fallback
+      return "غير محدد";
+    }
+
     const maleList = document.getElementById('maleList');
     const femaleList = document.getElementById('femaleList');
     const exportBtn = document.getElementById('exportBtn');
@@ -125,7 +149,7 @@
         li.innerHTML = `
           <input type="checkbox" data-id="${doc.id}" data-collection="${isUnlinked ? 'unlinkedUsers' : 'Users'}" />
           <span data-id="${doc.id}" style="color: ${isUnlinked ? 'red' : '#333'}; cursor:pointer; text-decoration: underline;">
-            ${name} - <small>${rank}</small> - <small>${team}</small> - <small>طليعة: ${group}</small> - <small>${birth}</small>
+            ${name} - <small>${rank}</small> - <small>${team}</small> - <small>طليعة: ${group}</small> - <small>${formatBirthdate(user.birthdate)}</small>
           </span>
         `;
 
@@ -170,7 +194,7 @@
           'اسم الأب': user.fatherName || "",
           'عنوان السكن': user.address || "",
           الجنس: user.gender || "",
-          'تاريخ الميلاد': user.birthdate || "",
+          'تاريخ الميلاد': formatBirthdate(user.birthdate) || "",
           المرحلة: user.stage || "",
           الفرقة: user.team || "",
           الطليعة: user.scoutGroup || "",

@@ -49,7 +49,7 @@ function showForm(container, profCard, userId) {
       const formData = {
         scoutName: document.getElementById("scoutName").value,
         email: document.getElementById("email").value,
-        birthdate: Timestamp.fromDate(new Date(document.getElementById("birthdate").value)),
+        birthdate: document.getElementById("birthdate").value,
         timestamp: Timestamp.now(),
         fatherName: document.getElementById("fatherName").value,
         homeJob: document.getElementById("homeJob").value,
