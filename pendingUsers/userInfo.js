@@ -32,10 +32,11 @@ async function loadUserData() {
     }
 
     const fields = [
-      "scoutName", "gender", "fatherName", "homeJob", "address", "emergencyContact", "education",
+      "scoutName", "email", "birthdate", "gender", "fatherName", "homeJob", "address", "emergencyContact", "education",
       "team", "scoutGroup", "stage", "currentRank", 
       "chronicDisease", "medication", "surgery", "bloodType"
     ];
+
 
     fields.forEach(field => {
       const fieldDiv = document.createElement("div");
