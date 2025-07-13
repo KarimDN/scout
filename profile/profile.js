@@ -4,6 +4,10 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "http
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 import { loadNavBar, handleAdminNavBar } from '../navBar.js';
+import { Timestamp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+
+
 const storage = getStorage(app);
 
 function showForm(container, profCard, userId) {
@@ -45,7 +49,8 @@ function showForm(container, profCard, userId) {
       const formData = {
         scoutName: document.getElementById("scoutName").value,
         email: document.getElementById("email").value,
-        birthdate: document.getElementById("birthdate").value,
+        birthdate: Timestamp.fromDate(new Date(document.getElementById("birthdate").value)),
+        timestamp: Timestamp.now(),
         fatherName: document.getElementById("fatherName").value,
         homeJob: document.getElementById("homeJob").value,
         address: document.getElementById("address").value,
@@ -60,7 +65,6 @@ function showForm(container, profCard, userId) {
         emergencyContact: document.getElementById("emergencyContact").value,
         scoutGroup: document.getElementById("scoutGroup").value,
         currentRank: document.getElementById("currentRank").value,
-        timestamp: new Date(),
         profilePicture: imageUrl
       };
 
