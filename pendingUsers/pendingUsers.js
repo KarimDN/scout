@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadUsers() {
   // Make sure user is logged in and is an admin
   onAuthStateChanged(auth, async (user) => {
+    const adminRef = doc(db, "admins", user.uid);
+    const adminSnap = await getDoc(adminRef);
+    if (!adminSnap.exists()) return location.href = '../main/main.html';
     if (!user) {
       window.location.href = '../login/login.html';  // Redirect to login page if not authenticated
     } else {

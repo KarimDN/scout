@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
+  <link rel="stylesheet" href="../loader.css">
+  <script type="module" src="../loader.js"></script>
+  <title>لوائح المستخدمين</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #5a4192;
+      margin-bottom: 40px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .item {
+      background-color: white;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .item a {
+      text-decoration: none;
+      color: #5a4192;
+      display: block;
+    }
+
+    .item a:hover {
+      color: #3a2d60;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar" id="nav"></nav>
+  <h1>لوائح المستخدمين</h1>
+
+  <ul>
+    <li class="item"><a href="ashbal.html">أشبال / زهرات</a></li>
+    <li class="item"><a href="kashafa.html">كشافة / مرشدات</a></li>
+    <li class="item"><a href="jawala.html">جوالة / دليلات</a></li>
+  </ul>
+  <script type="module">
+    import { loadNavBar, handleAdminNavBar } from '../navBar.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadNavBar();          // Load navbar first
+      handleAdminNavBar();         // Inject admin link & red dot
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
+  <link rel="stylesheet" href="../loader.css">
+  <script type="module" src="../loader.js"></script>
+  <title>قائمة جوالة/دليلات</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+    }
+    h1, h2 {
+      color: #5a4192;
+      margin-top: 40px;
+      border-bottom: 2px solid #5a4192;
+      padding-bottom: 5px;
+      margin-right: 15px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    .list {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 20px;
+    }
+    .list span {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #333;
+    }
+    .list span:hover {
+      color: #5a4192;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #5a4192;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #7b5dc7;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar" id="nav"></nav>
+  <h1>قائمة جوالة/دليلات</h1>
+
+  <h2>ذكور</h2>
+  <ul id="maleList"></ul>
+
+  <h2>إناث</h2>
+  <ul id="femaleList"></ul>
+
+  <button id="exportBtn">تصدير المحددين إلى Excel</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script type="module">
+    import { db, auth } from '../database.js';
+    import {
+      collection,
+      query,
+      where,
+      getDocs,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+    import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/xlsx.mjs';
+    import { loadNavBar, handleAdminNavBar } from '../navBar.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadNavBar();
+      handleAdminNavBar();
+    });
+
+    const maleList = document.getElementById('maleList');
+    const femaleList = document.getElementById('femaleList');
+    const exportBtn = document.getElementById('exportBtn');
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return location.href = '../login/login.html';
+      const adminRef = doc(db, "admins", user.uid);
+      const adminSnap = await getDoc(adminRef);
+      if (!adminSnap.exists()) return location.href = '../main/main.html';
+
+      loadUsers();
+    });
+
+    async function loadUsers() {
+      maleList.innerHTML = '';
+      femaleList.innerHTML = '';
+
+      // Query linked users
+      const qLinked = query(collection(db, "Users"), where("stage", "==", "جوالة/دليلات"));
+      const snapshotLinked = await getDocs(qLinked);
+
+      // Query unlinked users (adjust stage filter if needed)
+      const qUnlinked = query(collection(db, "unlinkedUsers"), where("stage", "==", "جوالة/دليلات"));
+      const snapshotUnlinked = await getDocs(qUnlinked);
+
+      // Helper to create list item
+      function createUserLi(doc, isUnlinked = false) {
+        const user = doc.data();
+        const gender = user.gender || "";
+        const name = user.scoutName || "";
+        const rank = user.currentRank || "";
+        const team = user.team || "";
+        const group = user.scoutGroup || "";
+        const birth = user.birthdate || "";
+
+        const li = document.createElement('li');
+        li.classList.add('list');
+
+      li.innerHTML = `
+        <input type="checkbox" data-id="${doc.id}" data-collection="${isUnlinked ? 'unlinkedUsers' : 'Users'}" />
+        <span data-id="${doc.id}" style="color: ${isUnlinked ? 'red' : '#333'}; cursor:pointer; text-decoration: underline;">
+          ${name} - <small>${rank}</small> - <small>${team}</small> - <small>رهط: ${group}</small> - <small>${birth}</small>
+        </span>
+      `;
+
+
+        li.querySelector("span").addEventListener("click", () => {
+          window.location.href = `user.html?id=${doc.id}`;
+        });
+
+        if (gender === "ذكر") {
+          maleList.appendChild(li);
+        } else if (gender === "أنثى") {
+          femaleList.appendChild(li);
+        }
+      }
+
+      // Add linked users
+      snapshotLinked.forEach(doc => createUserLi(doc, false));
+
+      // Add unlinked users (in red)
+      snapshotUnlinked.forEach(doc => createUserLi(doc, true));
+  }
+
+  exportBtn.addEventListener('click', async () => {
+    const selectedUsers = [];
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+    if (checkboxes.length === 0) {
+      alert("يرجى تحديد مستخدم واحد على الأقل للتصدير");
+      return;
+    }
+
+    for (const cb of checkboxes) {
+      const userId = cb.dataset.id;
+      const collectionName = cb.dataset.collection;
+
+      const userDoc = await getDoc(doc(db, collectionName, userId));
+      if (userDoc.exists()) {
+        const user = userDoc.data();
+
+        selectedUsers.push({
+          الاسم: user.scoutName || "",
+          'اسم الأب': user.fatherName || "",
+          'عنوان السكن': user.address || "",
+          الجنس: user.gender || "",
+          'تاريخ الميلاد': user.birthdate || "",
+          المرحلة: user.stage || "",
+          الفرقة: user.team || "",
+          الرهط: user.scoutGroup || "",
+          الرتبة: user.currentRank || "",
+          'التحصيل العلمي': user.education || "",
+          'عمل رب الأسرة': user.homeJob || "",
+          'فئة الدم': user.bloodType || "",
+          أدوية: user.medication || "",
+          عمليات: user.surgery || "",
+          أمراض: user.chronicDisease || "",
+          'البريد الإلكتروني': user.email || "",
+          'رقم الطوارئ': user.emergencyContact || ""
+        });
+      }
+    }
+
+    const ws = XLSX.utils.json_to_sheet(selectedUsers);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Users");
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    saveAs(blob, "SelectedUsers.xlsx");
+  });
+
+  
+  </script>
+</body>
+</html>
