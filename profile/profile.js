@@ -13,8 +13,10 @@ function showForm(container, profCard, userId) {
   if (!form) return;
 
   form.style.display = 'block';
-  form.replaceWith(form.cloneNode(true));  // Remove old listeners
-  const newForm = document.getElementById("scoutForm");
+  const clonedForm = form.cloneNode(true);
+  form.replaceWith(clonedForm);
+  const newForm = document.getElementById("scoutForm"); // now refers to the updated one
+
 
   newForm.addEventListener("submit", async function (e) {
     e.preventDefault();
