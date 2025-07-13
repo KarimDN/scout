@@ -1,4 +1,10 @@
-// ... (imports remain unchanged)
+import { app, auth, db } from '../database.js';
+import { getFirestore, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+import { v4 as uuidv4 } from "https://jspm.dev/uuid";
+import { loadNavBar, handleAdminNavBar } from '../navBar.js';
+const storage = getStorage(app);
 
 function showForm(container, profCard, userId) {
   profCard.innerHTML = '';
