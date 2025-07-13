@@ -15,58 +15,65 @@ function showForm(container, profCard, userId) {
   form.style.display = 'block';
   const clonedForm = form.cloneNode(true);
   form.replaceWith(clonedForm);
-  const newForm = document.getElementById("scoutForm"); // now refers to the updated one
+  const newForm = document.getElementById("scoutForm"); // updated form
 
+  const uploadLoader = document.getElementById("uploadLoader"); // Get here after DOM is ready
 
   newForm.addEventListener("submit", async function (e) {
     e.preventDefault();
+    uploadLoader.style.display = "flex"; // Show loading overlay
 
     const imageFile = document.getElementById('profilePic').files[0];
     let imageUrl = "";
 
-    if (imageFile) {
-      try {
-        const pathUserId = userId || 'anonymous-' + uuidv4();
-        const imageRef = storageRef(storage, `profilePictures/${pathUserId}/${imageFile.name}`);
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
-      } catch (error) {
-        console.error("Image upload failed:", error);
-        alert("فشل رفع الصورة. الرجاء المحاولة مجددًا.");
-        return;
-      }
-    }
-
-    const formData = {
-      scoutName: document.getElementById("scoutName").value,
-      email: document.getElementById("email").value,
-      birthdate: document.getElementById("birthdate").value,
-      fatherName: document.getElementById("fatherName").value,
-      homeJob: document.getElementById("homeJob").value,
-      address: document.getElementById("address").value,
-      education: document.getElementById("education").value,
-      stage: document.getElementById("stage").value,
-      gender: document.getElementById("gender").value,
-      team: document.getElementById("team").value,
-      bloodType: document.getElementById("bloodType").value,
-      chronicDisease: document.getElementById("chronicDisease").value,
-      medication: document.getElementById("medication").value,
-      surgery: document.getElementById("surgery").value,
-      emergencyContact: document.getElementById("emergencyContact").value,
-      scoutGroup: document.getElementById("scoutGroup").value,
-      currentRank: document.getElementById("currentRank").value,
-      timestamp: new Date(),
-      profilePicture: imageUrl
-    };
-
     try {
+      if (imageFile) {
+        const pathUserId = userId || 'anonymous-' + uuidv4();
+
+        // compress image
+        const compressedFile = await imageCompression(imageFile, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 800,
+          useWebWorker: true
+        });
+
+        const imageRef = storageRef(storage, `profilePictures/${pathUserId}/${imageFile.name}`);
+        await uploadBytes(imageRef, compressedFile);
+        imageUrl = await getDownloadURL(imageRef);
+      }
+
+      const formData = {
+        scoutName: document.getElementById("scoutName").value,
+        email: document.getElementById("email").value,
+        birthdate: document.getElementById("birthdate").value,
+        fatherName: document.getElementById("fatherName").value,
+        homeJob: document.getElementById("homeJob").value,
+        address: document.getElementById("address").value,
+        education: document.getElementById("education").value,
+        stage: document.getElementById("stage").value,
+        gender: document.getElementById("gender").value,
+        team: document.getElementById("team").value,
+        bloodType: document.getElementById("bloodType").value,
+        chronicDisease: document.getElementById("chronicDisease").value,
+        medication: document.getElementById("medication").value,
+        surgery: document.getElementById("surgery").value,
+        emergencyContact: document.getElementById("emergencyContact").value,
+        scoutGroup: document.getElementById("scoutGroup").value,
+        currentRank: document.getElementById("currentRank").value,
+        timestamp: new Date(),
+        profilePicture: imageUrl
+      };
+
       const documentId = userId || uuidv4();
       await setDoc(doc(db, "pendingUsers", documentId), formData);
       alert("تم إرسال البيانات بنجاح! في انتظار المراجعة.");
       newForm.reset();
+      location.reload();
     } catch (error) {
       console.error("Error saving data:", error);
       alert("حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.");
+    } finally {
+      uploadLoader.style.display = "none"; // Hide loader
     }
   });
 }
