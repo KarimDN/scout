@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تعديل بيانات المستخدم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
+  <link rel="stylesheet" href="../loader.css">
+  <script type="module" src="../loader.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select, .readonly-field {
+      width: 70%;
+      padding: 8px;
+      margin-bottom: 15px;
+    }
+    .readonly-field {
+      background-color: #f4f4f4;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #5a4192;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #7b5dc7;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="nav"></nav>
+
+  <h2>تعديل أو معاينة بيانات المستخدم</h2>
+
+  <form id="editForm">
+    <label>الاسم:</label>
+    <p id="scoutName" class="readonly-field"></p>
+
+    <label>اسم الأب:</label>
+    <p id="fatherName" class="readonly-field"></p>
+
+    <label>تاريخ الميلاد:</label>
+    <p id="birthdate" class="readonly-field"></p>
+
+    <label>البريد الإلكتروني:</label>
+    <input type="email" id="email" />
+
+    <label>الجنس:</label>
+    <input type="text" id="gender" />
+
+    <label>عنوان السكن:</label>
+    <input type="text" id="address" />
+
+    <label>عمل رب الأسرة:</label>
+    <input type="text" id="homeJob" />
+
+    <label>التحصيل العلمي:</label>
+    <input type="text" id="education" />
+
+    <label>المرحلة:</label>
+    <input type="text" id="stage" />
+
+    <label>الفرقة:</label>
+    <input type="text" id="team" />
+
+    <label>الطليعة:</label>
+    <input type="text" id="scoutGroup" />
+
+    <label>الرتبة:</label>
+    <input type="text" id="currentRank" />
+
+    <label>فئة الدم:</label>
+    <input type="text" id="bloodType" />
+
+    <label>أمراض مزمنة:</label>
+    <input type="text" id="chronicDisease" />
+
+    <label>أدوية:</label>
+    <input type="text" id="medication" />
+
+    <label>عمليات جراحية:</label>
+    <input type="text" id="surgery" />
+
+    <label>رقم الطوارئ:</label>
+    <input type="text" id="emergencyContact" />
+
+    <br>
+    <button type="submit">تعديل</button>
+    <button type="button" id="deleteBtn" style="background-color: red;">حذف المستخدم</button>
+  </form>
+
+  <script type="module">
+    import { db, auth } from '../database.js';
+    import {
+      doc, getDoc, updateDoc, deleteDoc, Timestamp
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return location.href = '../login/login.html';
+      const adminRef = doc(db, "admins", user.uid);
+      const adminSnap = await getDoc(adminRef);
+      if (!adminSnap.exists()) return location.href = '../main/main.html';
+      loadUser();
+    });
+
+    const params = new URLSearchParams(location.search);
+    const userId = params.get('id');
+    const form = document.getElementById('editForm');
+    const deleteBtn = document.getElementById('deleteBtn');
+    let collectionName = "";
+
+    async function loadUser() {
+      if (!userId) return alert("لم يتم تحديد المستخدم");
+
+      const userRefUsers = doc(db, "Users", userId);
+      const userRefUnlinked = doc(db, "unlinkedUsers", userId);
+      const docSnapUsers = await getDoc(userRefUsers);
+
+      let userDoc;
+      if (docSnapUsers.exists()) {
+        userDoc = docSnapUsers;
+        collectionName = "Users";
+      } else {
+        const docSnapUnlinked = await getDoc(userRefUnlinked);
+        if (docSnapUnlinked.exists()) {
+          userDoc = docSnapUnlinked;
+          collectionName = "unlinkedUsers";
+        } else {
+          alert("لم يتم العثور على المستخدم.");
+          return;
+        }
+      }
+
+      const data = userDoc.data();
+
+      // Display non-editable fields
+      document.getElementById("scoutName").textContent = data.scoutName || '';
+      document.getElementById("fatherName").textContent = data.fatherName || '';
+      const birth = data.birthdate;
+      let birthStr = '';
+      if (birth?.toDate) {
+        birthStr = birth.toDate().toISOString().split('T')[0];
+      } else if (typeof birth === 'object' && birth.seconds) {
+        birthStr = new Date(birth.seconds * 1000).toISOString().split('T')[0];
+      } else if (typeof birth === 'string') {
+        birthStr = birth;
+      }
+      document.getElementById("birthdate").textContent = birthStr;
+
+      // Fill editable fields
+      document.getElementById("email").value = data.email || '';
+      document.getElementById("gender").value = data.gender || '';
+      document.getElementById("address").value = data.address || '';
+      document.getElementById("homeJob").value = data.homeJob || '';
+      document.getElementById("education").value = data.education || '';
+      document.getElementById("stage").value = data.stage || '';
+      document.getElementById("team").value = data.team || '';
+      document.getElementById("scoutGroup").value = data.scoutGroup || '';
+      document.getElementById("currentRank").value = data.currentRank || '';
+      document.getElementById("bloodType").value = data.bloodType || '';
+      document.getElementById("chronicDisease").value = data.chronicDisease || '';
+      document.getElementById("medication").value = data.medication || '';
+      document.getElementById("surgery").value = data.surgery || '';
+      document.getElementById("emergencyContact").value = data.emergencyContact || '';
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const updatedData = {
+        email: document.getElementById("email").value,
+        gender: document.getElementById("gender").value,
+        address: document.getElementById("address").value,
+        homeJob: document.getElementById("homeJob").value,
+        education: document.getElementById("education").value,
+        stage: document.getElementById("stage").value,
+        team: document.getElementById("team").value,
+        scoutGroup: document.getElementById("scoutGroup").value,
+        currentRank: document.getElementById("currentRank").value,
+        bloodType: document.getElementById("bloodType").value,
+        chronicDisease: document.getElementById("chronicDisease").value,
+        medication: document.getElementById("medication").value,
+        surgery: document.getElementById("surgery").value,
+        emergencyContact: document.getElementById("emergencyContact").value
+      };
+
+      try {
+        await updateDoc(doc(db, collectionName, userId), updatedData);
+        alert("تم التحديث بنجاح!");
+      } catch (error) {
+        console.error("Update failed:", error);
+        alert("حدث خطأ أثناء التحديث");
+      }
+    });
+
+    deleteBtn.addEventListener("click", async () => {
+      if (!confirm("هل أنت متأكد أنك تريد حذف هذا المستخدم؟")) return;
+      try {
+        await deleteDoc(doc(db, collectionName, userId));
+        alert("تم حذف المستخدم.");
+        window.location.href = "../main/main.html";
+      } catch (error) {
+        console.error("Delete failed:", error);
+        alert("حدث خطأ أثناء الحذف");
+      }
+    });
+
+    loadUser();
+  </script>
+</body>
+</html>

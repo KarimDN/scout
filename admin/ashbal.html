@@ -153,16 +153,16 @@
         const li = document.createElement('li');
         li.classList.add('list');
 
-      li.innerHTML = `
-        <input type="checkbox" data-id="${doc.id}" data-collection="${isUnlinked ? 'unlinkedUsers' : 'Users'}" />
-        <span data-id="${doc.id}" style="color: ${isUnlinked ? 'red' : '#333'}; cursor:pointer; text-decoration: underline;">
-          ${name} - <small>${rank}</small> - <small>${team}</small> - <small>طليعة: ${group}</small> - <small>${formatBirthdate(user.birthdate)}</small>
-        </span>
-      `;
+        li.innerHTML = `
+          <input type="checkbox" data-id="${doc.id}" data-collection="${isUnlinked ? 'unlinkedUsers' : 'Users'}" />
+          <span data-id="${doc.id}" style="color: ${isUnlinked ? 'red' : '#333'}; cursor:pointer; text-decoration: underline;">
+            ${name} - <small>${rank}</small> - <small>${team}</small> - <small>طليعة: ${group}</small> - <small>${formatBirthdate(user.birthdate)}</small>
+          </span>
+        `;
 
 
         li.querySelector("span").addEventListener("click", () => {
-          window.location.href = `user.html?id=${doc.id}`;
+          window.location.href = `editUser.html?id=${doc.id}`;
         });
 
         if (gender === "ذكر") {
