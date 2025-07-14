@@ -15,7 +15,6 @@ function showForm(container, profCard, userId) {
 
   const form = document.getElementById("scoutForm");
   if (!form) return;
-
   form.style.display = 'block';
   const clonedForm = form.cloneNode(true);
   form.replaceWith(clonedForm);

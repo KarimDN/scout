@@ -1,127 +1,130 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الملف الشخصي</title>
-    <link rel="stylesheet" href="profile.css">
-    <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
-    <link rel="stylesheet" href="../loader.css">
-    <script type="module" src="../loader.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الملف الشخصي</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap">
+  <link rel="stylesheet" href="../loader.css">
+  <link rel="stylesheet" href="profile.css">
+  <link rel="icon" type="image/x-icon" href="../Images/NWUC7432-removebg-preview.png">
+  <script type="module" src="../loader.js"></script>
 </head>
 <body>
-    <div id="loader" class="loader">
-        <div class="spinner"></div>
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <nav class="navbar" id="nav"></nav>
+
+  <div class="content">
+    <div id="leftCard" class="leftCard">
+      <div class="picture">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.4" d="M12 22.01C17.5228 22.01 22 17.5329 22 12.01C22 6.48716 17.5228 2.01001 12 2.01001C6.47715 2.01001 2 6.48716 2 12.01C2 17.5329 6.47715 22.01 12 22.01Z" fill="#292D32"/>
+          <path d="M12 6.93994C9.93 6.93994 8.25 8.61994 8.25 10.6899C8.25 12.7199 9.84 14.3699 11.95 14.4299C11.98 14.4299 12.02 14.4299 12.04 14.4299C12.06 14.4299 12.09 14.4299 12.11 14.4299C12.12 14.4299 12.13 14.4299 12.13 14.4299C14.15 14.3599 15.74 12.7199 15.75 10.6899C15.75 8.61994 14.07 6.93994 12 6.93994Z" fill="#292D32"/>
+          <path d="M18.7807 19.36C17.0007 21 14.6207 22.01 12.0007 22.01C9.3807 22.01 7.0007 21 5.2207 19.36C5.4607 18.45 6.1107 17.62 7.0607 16.98C9.7907 15.16 14.2307 15.16 16.9407 16.98C17.9007 17.62 18.5407 18.45 18.7807 19.36Z" fill="#292D32"/>
+        </svg>
+      </div>
+      <div class="memberName"></div>
+      <div class="memberPosition"></div>
     </div>
 
-    <nav class="navbar" id="nav"></nav>
-    <div class="content">
+    <div id="formCard" class="rightCard">
+      <h2>سجل الكشاف</h2>
+      <form id="scoutForm">
+            <label for="scoutName">الاسم الكامل:</label>
+            <input type="text" id="scoutName" required>
 
-        <div id="leftCard" class="leftCard">
-            <div class="picture">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path opacity="0.4" d="M12 22.01C17.5228 22.01 22 17.5329 22 12.01C22 6.48716 17.5228 2.01001 12 2.01001C6.47715 2.01001 2 6.48716 2 12.01C2 17.5329 6.47715 22.01 12 22.01Z" fill="#292D32"/>
-                    <path d="M12 6.93994C9.93 6.93994 8.25 8.61994 8.25 10.6899C8.25 12.7199 9.84 14.3699 11.95 14.4299C11.98 14.4299 12.02 14.4299 12.04 14.4299C12.06 14.4299 12.09 14.4299 12.11 14.4299C12.12 14.4299 12.13 14.4299 12.13 14.4299C14.15 14.3599 15.74 12.7199 15.75 10.6899C15.75 8.61994 14.07 6.93994 12 6.93994Z" fill="#292D32"/>
-                    <path d="M18.7807 19.36C17.0007 21 14.6207 22.01 12.0007 22.01C9.3807 22.01 7.0007 21 5.2207 19.36C5.4607 18.45 6.1107 17.62 7.0607 16.98C9.7907 15.16 14.2307 15.16 16.9407 16.98C17.9007 17.62 18.5407 18.45 18.7807 19.36Z" fill="#292D32"/>
-                </svg>
-            </div>
-            <div class="memberName"></div>
-            <div class="memberPosition"></div>
-        </div>
+            <label for="fatherName">اسم الأب:</label>
+            <input type="text" id="fatherName" required>
 
-        <div id="formCard" class="rightCard">
-            <h2>سجل الكشاف</h2>
-            <form id="scoutForm">
-                <label for="scoutName">الاسم الكامل:</label>
-                <input type="text" id="scoutName" required>
-
-                <label for="fatherName">اسم الأب:</label>
-                <input type="text" id="fatherName" required>
-
-                <label for="birthdate">تاريخ الميلاد:</label>
-                <input type="date" id="birthdate" required>
-
-                <label for="homeJob">عمل رب المنزل:</label>
-                <input type="text" id="homeJob" required>
-
-                <label for="address">عنوان السكن:</label>
-                <input type="text" id="address" required>
-
-                <label for="education">التحصيل العلمي:</label>
-                <input type="text" id="education" required>
-
-                <label for="stage">المرحلة:</label>
-                <select id="stage" required>
-                    <option value="أشبال/زهرات">أشبال/زهرات</option>
-                    <option value="كشافة/مرشدات">كشافة/مرشدات</option>
-                    <option value="جوالة/دليلات">جوالة/دليلات</option>
-                </select>
-
-                <label for="gender">الجنس:</label>
-                <select id="gender" required>
-                    <option value="ذكر">ذكر</option>
-                    <option value="أنثى">أنثى</option>
-                </select>
-
-                <label for="team">الفرقة:</label>
-                <input type="text" id="team" required>
-
-                <label for="bloodType">زمرة الدم:</label>
-                <select id="bloodType" required>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                </select>
-
-                <label for="chronicDisease">هل يعاني الكشاف من أي أمراض مزمنة؟</label>
-                <input type="text" id="chronicDisease" required>
-
-                <label for="medication">هل يأخذ الكشاف دواء بشكل دائم؟</label>
-                <input type="text" id="medication" required>
-
-                <label for="surgery">هل أجرى الكشاف عملية/ات جراحية سابقة؟</label>
-                <input type="text" id="surgery" required>
-
-                <label for="emergencyContact">عند الضرورة الاتصال على:</label>
-                <input type="text" id="emergencyContact" required>
-
-                <label for="email">البريد الإلكتروني:</label>
-                <input type="email" id="email">
-
-                <label for="scoutGroup">اسم طليعة الكشاف:</label>
-                <input type="text" id="scoutGroup" required>
-
-                <label for="currentRank">رتبته الكشفية الحالية:</label>
-                <select id="currentRank" required>
-                    <option value="مرشح عنصر">مرشح عنصر</option>
-                    <option value="عنصر">عنصر</option>
-                    <option value="مساعد عريف">مساعد عريف</option>
-                    <option value="عريف طليعة">عريف طليعة</option>
-                    <option value="عريف أول">عريف أول</option>
-                    <option value="معاون قائد">معاون قائد</option>
-                    <option value="مساعد قائد">مساعد قائد</option>
-                    <option value="قائد فرقة">قائد فرقة</option>
-                </select>
                 
-                <label for="profilePic">Profile Picture</label>
-                <input type="file" id="profilePic" accept="image/*">
+            <label for="birthdate">تاريخ الميلاد:</label>
+            <input type="date" id="birthdate" required>
 
-                <button type="submit">إرسال</button>
-            </form>
-            <div id="uploadLoader" class="loader" style="display: none;">
-                <div style="text-align: center;">
-                    <div class="spinner"></div>
-                    <p style="margin-top: 15px; font-weight: bold; color: #5a4192;">جاري رفع البيانات، الرجاء الانتظار...</p>
-                </div>
-            </div>
+            <label for="homeJob">عمل رب المنزل:</label>
+            <input type="text" id="homeJob" required>
+
+            <label for="address">عنوان السكن:</label>
+            <input type="text" id="address" required>
+
+            <label for="education">التحصيل العلمي:</label>
+            <input type="text" id="education" required>
+
+            <label for="stage">المرحلة:</label>
+            <select id="stage" required>
+                <option value="أشبال/زهرات">أشبال/زهرات</option>
+                <option value="كشافة/مرشدات">كشافة/مرشدات</option>
+                <option value="جوالة/دليلات">جوالة/دليلات</option>
+            </select>
+
+            <label for="gender">الجنس:</label>
+            <select id="gender" required>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+            </select>
+
+            <label for="team">الفرقة:</label>
+            <input type="text" id="team" required>
+
+            <label for="bloodType">زمرة الدم:</label>
+            <select id="bloodType" required>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+
+            <label for="chronicDisease">هل يعاني الكشاف من أي أمراض مزمنة؟</label>
+            <input type="text" id="chronicDisease" required>
+
+            <label for="medication">هل يأخذ الكشاف دواء بشكل دائم؟</label>
+            <input type="text" id="medication" required>
+
+            <label for="surgery">هل أجرى الكشاف عملية/ات جراحية سابقة؟</label>
+            <input type="text" id="surgery" required>
+
+            <label for="emergencyContact">عند الضرورة الاتصال على:</label>
+            <input type="text" id="emergencyContact" required>
+
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email">
+
+            <label for="scoutGroup">اسم طليعة الكشاف:</label>
+            <input type="text" id="scoutGroup" required>
+
+            <label for="currentRank">رتبته الكشفية الحالية:</label>
+            <select id="currentRank" required>
+                <option value="مرشح عنصر">مرشح عنصر</option>
+                <option value="عنصر">عنصر</option>
+                <option value="مساعد عريف">مساعد عريف</option>
+                <option value="عريف طليعة">عريف طليعة</option>
+                <option value="عريف أول">عريف أول</option>
+                <option value="معاون قائد">معاون قائد</option>
+                <option value="مساعد قائد">مساعد قائد</option>
+                <option value="قائد فرقة">قائد فرقة</option>
+            </select>
+                
+            <label for="profilePic">Profile Picture</label>
+            <input type="file" id="profilePic" accept="image/*">
+
+            <button type="submit">إرسال</button>
+      </form>
+      <div id="uploadLoader" class="loader" style="display: none;">
+        <div style="text-align: center;">
+          <div class="spinner"></div>
+          <p style="margin-top: 15px; font-weight: bold; color: #5a4192;">جاري رفع البيانات، الرجاء الانتظار...</p>
         </div>
-    </div>    
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+  <script type="module" src="profile.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
-<script type="module" src="profile.js"></script>
 </html>
